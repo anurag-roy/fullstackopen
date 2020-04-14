@@ -1,0 +1,20 @@
+note over browser:
+User writes a note and clicks "Save".
+This submits the form and creates a 
+POST request with the note text.
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+
+note over server:
+The note is obtained from the body of 
+the request and inserted
+into the notes variable/array.
+end note
+
+server-->browser: Redirect to the notes page
+
+note over browser:
+Browser reloads the notes page
+and fires the 4 consecutive GET requests
+end note

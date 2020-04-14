@@ -1,0 +1,17 @@
+note over browser:
+User writes note and hits "Save".
+Instead of traditional form handling and sending
+an immediate POST request, the content
+of the new note is added to the note list variable
+in the browser and not the server.
+end note
+
+note over browser:
+The notes list in the UI is redrawn using 
+DOM-API and the new note is displayed. Then,
+the new note is sent as a POST request to
+the server.
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server-->browser: {"message":"note created"}

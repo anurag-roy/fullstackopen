@@ -1,54 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
 
-const Header = (props) => {
-  return (<h1>{props.course.name}</h1>);
-};
-
-const Part = (props) => {
-  return (<p>{props.part} {props.exercises}</p>);
-};
-
-const Content = (props) => {
+const Button = (props) => {
   return (
-    <>
-      <Part part={props.course.parts[0].name} exercises={props.course.parts[0].exercises}/>
-      <Part part={props.course.parts[1].name} exercises={props.course.parts[1].exercises}/>
-      <Part part={props.course.parts[2].name} exercises={props.course.parts[2].exercises}/>
-    </>
-  );
-};
+    <button onClick={props.handleClick}>
+      {props.buttonTitle}
+    </button>
+  )
+}
 
-const Total = (props) => {
-  return (<p>Number of exercises {props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises}</p>);
-};
-
+const Stats = (props) => {
+  return (
+    <div>
+      {props.text} {props.value}
+    </div>
+  )
+}
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+  // save clicks of each button to own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
   return (
     <div>
-      <Header course={course} />
-      <Content course={course} />
-      <Total course={course} />
+      <h4><b>give feedback</b></h4>
+      <Button handleClick={() => setGood(good + 1)} buttonTitle='good' />
+      <Button handleClick={() => setNeutral(neutral + 1)} buttonTitle='neutral' />
+      <Button handleClick={() => setBad(bad + 1)} buttonTitle='bad' />
+      <h4><b>statistics</b></h4>
+      <Stats text='good' value={good}/>
+      <Stats text='neutral' value={neutral}/>
+      <Stats text='bad' value={bad}/>
     </div>
-  );
-};
+  )
+}
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App />,
+  document.getElementById('root')
+)

@@ -1,21 +1,18 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const Button = (props) => {
-  return (
-    <button onClick={props.handleClick}>
-      {props.buttonTitle}
-    </button>
-  )
-}
+const Button = ({handleClick, buttonTitle}) => (
+  <button onClick={handleClick}>
+    {buttonTitle}
+  </button>
+)
 
-const Stats = (props) => {
-  return (
-    <div>
-      {props.text} {props.value}
-    </div>
-  )
-}
+const Stats = ({text, value}) =>  (
+  <div>
+    {text} {value}
+  </div>
+)
+
 const App = () => {
   // save clicks of each button to own state
   const [good, setGood] = useState(0)

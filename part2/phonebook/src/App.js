@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
-const App = ({ personsArray }) => {
-  const [persons, setPersons] = useState(personsArray);
+import axios from "axios";
+
+const App = () => {
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then(({ data }) => {
+      setPersons(data);
+    });
+  }, []);
 
   const personsToShow = filter
     ? persons.filter((p) => p.name.toLowerCase().includes(filter.toLowerCase()))

@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import Person from "./components/Person";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
-const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+const App = ({ personsArray }) => {
+  const [persons, setPersons] = useState(personsArray);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
@@ -32,44 +29,31 @@ const App = () => {
   };
 
   const changeNewName = (event) => {
-    // console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const changeNewNumber = (event) => {
-    // console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
   const changeFilter = (event) => {
-    // console.log(event.target.value);
     setFilter(event.target.value);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={filter} onChange={changeFilter} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={changeNewName} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={changeNewNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {personsToShow.map((p) => (
-          <Person key={p.name} name={p.name} number={p.number} />
-        ))}
-      </div>
+      <Filter filter={filter} changeFilter={changeFilter} />
+      <h3>Add a new</h3>
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        changeNewName={changeNewName}
+        newNumber={newNumber}
+        changeNewNumber={changeNewNumber}
+      />
+      <h3>Numbers</h3>
+      <Persons persons={personsToShow} />
     </div>
   );
 };

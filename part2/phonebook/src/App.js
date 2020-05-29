@@ -20,7 +20,7 @@ const App = () => {
   };
 
   const changeNewName = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setNewName(event.target.value);
   };
 

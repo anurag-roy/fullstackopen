@@ -1,24 +1,27 @@
 import React from "react";
 import Country from "./Country";
 
-const Display = ({ countries, filter }) => {
-  const filteredCountries = countries.filter((c) =>
-    c.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  if (filter === "") {
-    return <div>Specify a filter</div>;
-  } else {
-    if (filteredCountries.length > 10) {
-      return <div>Too many matches, specify another filter</div>;
-    } else if (filteredCountries.length > 1) {
-      return filteredCountries.map((c) => <div key={c.name}>{c.name}</div>);
-    } else if (filteredCountries.length === 1) {
-      return <Country country={filteredCountries[0]} />;
-    }
+const Display = ({ length, filteredCountries, handleShow }) => {
+  if (length > 10) {
+    return <div>Too many matches, specify another filter</div>;
+  } else if (length > 1) {
+    return filteredCountries.map((c, i) => (
+      <div key={c.name}>
+        {c.name}{" "}
+        <button value={i} onClick={handleShow}>
+          show
+        </button>
+      </div>
+    ));
+  } else if (length === 1) {
+    return (
+      <div>
+        <Country country={filteredCountries[0]} />
+      </div>
+    );
+  } else if (length === 0) {
+    return <div>No matches found</div>;
   }
-
-  return <div>No matches found</div>;
 };
 
 export default Display;

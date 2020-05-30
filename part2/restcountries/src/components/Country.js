@@ -1,6 +1,8 @@
 import React from "react";
 
 const Country = ({ country }) => {
+  if (country === null) return <div></div>;
+
   return (
     <div>
       <h1>{country.name}</h1>

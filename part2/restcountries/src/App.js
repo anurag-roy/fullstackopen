@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Display from "./components/Display";
 import Country from "./components/Country";
+import Weather from "./components/Weather";
 import axios from "axios";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
   const [showCountry, setShowCountry] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     axios.get("https://restcountries.eu/rest/v2/all").then(({ data }) => {
@@ -14,18 +16,40 @@ const App = () => {
     });
   }, []);
 
+  const filteredCountries = countries.filter((c) =>
+    c.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  useEffect(() => {
+    if (filteredCountries.length === 1) {
+      setShowCountry(filteredCountries[0]);
+    } else setShowCountry(null);
+  }, [filter]);
+
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-    setShowCountry(null);
   };
 
   const handleShow = (event) => {
     setShowCountry(filteredCountries[event.target.value]);
   };
 
-  const filteredCountries = countries.filter((c) =>
-    c.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  useEffect(() => {
+    if (showCountry !== null) {
+      const apiKey = process.env.REACT_APP_API_KEY;
+      axios
+        .get("http://api.weatherstack.com/current", {
+          params: {
+            access_key: apiKey,
+            query: showCountry.name,
+          },
+        })
+        .then(({ data }) => {
+          setWeatherData(data);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [showCountry]);
 
   return (
     <div>
@@ -36,6 +60,7 @@ const App = () => {
         handleShow={handleShow}
       />
       <Country country={showCountry} />
+      <Weather weatherData={weatherData} />
     </div>
   );
 };

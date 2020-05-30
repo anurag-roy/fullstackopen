@@ -1,5 +1,4 @@
 import React from "react";
-import Country from "./Country";
 
 const Display = ({ length, filteredCountries, handleShow }) => {
   if (length > 10) {
@@ -13,12 +12,6 @@ const Display = ({ length, filteredCountries, handleShow }) => {
         </button>
       </div>
     ));
-  } else if (length === 1) {
-    return (
-      <div>
-        <Country country={filteredCountries[0]} />
-      </div>
-    );
   } else if (length === 0) {
     return <div>No matches found</div>;
   }

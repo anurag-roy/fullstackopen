@@ -11,7 +11,13 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    personService.getAll().then((initialPersons) => setPersons(initialPersons));
+    personService
+      .getAll()
+      .then((initialPersons) => setPersons(initialPersons))
+      .catch((error) => {
+        alert("Could not load data from the server.");
+        console.error(error);
+      });
   }, []);
 
   const personsToShow = filter
@@ -29,7 +35,11 @@ const App = () => {
       };
       personService
         .create(newObject)
-        .then((returnedPerson) => setPersons(persons.concat(returnedPerson)));
+        .then((returnedPerson) => setPersons(persons.concat(returnedPerson)))
+        .catch((error) => {
+          alert("Could not add person to phonebook.");
+          console.error(error);
+        });
     }
     setNewName("");
     setNewNumber("");

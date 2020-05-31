@@ -1,8 +1,8 @@
 import React from "react";
 
-const Person = ({ name, number }) => (
+const Person = ({ name, number, handleClick, id }) => (
   <div>
-    {name} {number}
+    {name} {number} <button onClick={() => handleClick(id)}>delete</button>
   </div>
 );
 

@@ -36,15 +36,30 @@ const App = () => {
         )
       ) {
         const newPerson = { ...duplicatePerson, number: newNumber };
-        personService.update(newPerson.id, newPerson).then((returnedPerson) => {
-          setPersons(
-            persons.map((p) => (p.name === newName ? returnedPerson : p))
-          );
-          setNotification(`Updated phone number for ${returnedPerson.name}`);
-          setTimeout(() => {
-            setNotification(null);
-          }, 5000);
-        });
+        personService
+          .update(newPerson.id, newPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((p) => (p.name === newName ? returnedPerson : p))
+            );
+            setNotification({
+              type: "info",
+              message: `Updated phone number for ${returnedPerson.name}`,
+            });
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            setNotification({
+              type: "error",
+              message: `Information of ${newPerson.name} has already been removed from the server`,
+            });
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+            setPersons(persons.filter((p) => p.name !== newName));
+          });
       }
     } else {
       const newObject = {
@@ -55,7 +70,10 @@ const App = () => {
         .create(newObject)
         .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
-          setNotification(`Added ${returnedPerson.name}`);
+          setNotification({
+            type: "info",
+            message: `Added ${returnedPerson.name}`,
+          });
           setTimeout(() => {
             setNotification(null);
           }, 5000);
@@ -93,7 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification notification={notification} />
       <Filter filter={filter} changeFilter={changeFilter} />
       <h3>Add a new</h3>
       <PersonForm

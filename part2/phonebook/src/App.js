@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 import personService from "./services/persons";
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService
@@ -34,13 +36,15 @@ const App = () => {
         )
       ) {
         const newPerson = { ...duplicatePerson, number: newNumber };
-        personService
-          .update(newPerson.id, newPerson)
-          .then((returnedPerson) =>
-            setPersons(
-              persons.map((p) => (p.name === newName ? returnedPerson : p))
-            )
+        personService.update(newPerson.id, newPerson).then((returnedPerson) => {
+          setPersons(
+            persons.map((p) => (p.name === newName ? returnedPerson : p))
           );
+          setNotification(`Updated phone number for ${returnedPerson.name}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        });
       }
     } else {
       const newObject = {
@@ -49,7 +53,13 @@ const App = () => {
       };
       personService
         .create(newObject)
-        .then((returnedPerson) => setPersons(persons.concat(returnedPerson)))
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNotification(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        })
         .catch((error) => {
           alert("Could not add person to phonebook.");
           console.error(error);
@@ -83,6 +93,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter filter={filter} changeFilter={changeFilter} />
       <h3>Add a new</h3>
       <PersonForm

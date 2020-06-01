@@ -3,7 +3,17 @@ import morgan from "morgan";
 
 const app = express();
 
-app.use(morgan("tiny"))
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :postContent"
+  )
+);
+
+morgan.token("postContent", (req, res) => {
+  if (req.method === "POST") {
+    return JSON.stringify(req.body);
+  }
+});
 
 let persons = [
   {

@@ -50,6 +50,19 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
+app.use(express.json());
+
+app.post("/api/persons", ({ body }, res) => {
+  const newPerson = {
+    name: body.name,
+    number: body.number,
+    id: Math.floor(Math.random()*1000),
+  };
+  persons = persons.concat(newPerson);
+
+  res.json(newPerson);
+});
+
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((p) => p.id !== id);

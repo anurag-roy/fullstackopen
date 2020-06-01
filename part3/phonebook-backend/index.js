@@ -31,7 +31,7 @@ app.get("/info", (req, res) => {
     `<div>
         Phonebook has info for ${persons.length} people <br /> <br />
         ${requestDateTime}
-      </div>`
+     </div>`
   );
 });
 
@@ -53,10 +53,22 @@ app.get("/api/persons/:id", (req, res) => {
 app.use(express.json());
 
 app.post("/api/persons", ({ body }, res) => {
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: "Name or number is missing",
+    });
+  }
+
+  if (persons.find((p) => p.name === body.name)) {
+    return res.status(400).json({
+      error: "Name must be unique",
+    });
+  }
+
   const newPerson = {
     name: body.name,
     number: body.number,
-    id: Math.floor(Math.random()*1000),
+    id: Math.floor(Math.random() * 1000),
   };
   persons = persons.concat(newPerson);
 

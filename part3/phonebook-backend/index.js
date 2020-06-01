@@ -25,18 +25,29 @@ const persons = [
   },
 ];
 
-app.get("/api/persons", (req, res) => {
-  res.json(persons);
-});
-
 app.get("/info", (req, res) => {
   const requestDateTime = new Date().toString();
   res.send(
     `<div>
-      Phonebook has info for ${persons.length} people <br /> <br />
-      ${requestDateTime}
-    </div>`
+        Phonebook has info for ${persons.length} people <br /> <br />
+        ${requestDateTime}
+      </div>`
   );
+});
+
+app.get("/api/persons", (req, res) => {
+  res.json(persons);
+});
+
+app.get("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const person = persons.find((p) => p.id === id);
+
+  if (person) {
+    res.json(person);
+  } else {
+    res.status(404).end();
+  }
 });
 
 const PORT = 3001;

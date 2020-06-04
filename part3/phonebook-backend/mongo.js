@@ -21,11 +21,19 @@ const personSchema = new mongoose.Schema({
   id: Number,
 });
 
+personSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
 const Person = mongoose.model("Person", personSchema);
 
 if (process.argv.length === 3) {
   Person.find({}).then((result) => {
-    console.log("phonebook:")
+    console.log("phonebook:");
     result.forEach((p) => console.log(`${p.name} ${p.number}`));
     mongoose.connection.close();
   });
@@ -36,7 +44,6 @@ if (process.argv.length === 3) {
   const person = new Person({
     name,
     number,
-    id: Math.floor(Math.random() * 1000),
   });
 
   person.save().then((result) => {

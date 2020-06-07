@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
+import uniqueValidator from "mongoose-unique-validator";
 import dotenv from "dotenv";
 dotenv.config();
 
-mongoose.set('useFindAndModify', false)
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
 
 const url = process.env.MONGODB_URI;
 
@@ -14,10 +16,12 @@ mongoose
   .catch((err) => console.log("Couldn't connect. Error: ", err.message));
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: { type: String, required: true, unique: true },
+  number: { type: String, required: true },
   id: String,
 });
+
+personSchema.plugin(uniqueValidator);
 
 personSchema.set("toJSON", {
   transform: (document, returnedObject) => {

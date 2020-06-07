@@ -16,7 +16,7 @@ app.use(
 );
 
 morgan.token("postContent", (req, res) => {
-  if (req.method === "POST") {
+  if (req.method === "POST" || req.method === "PUT") {
     return JSON.stringify(req.body);
   }
 });
@@ -66,6 +66,18 @@ app.post("/api/persons", ({ body }, res) => {
   person.save().then((result) => {
     res.json(result);
   });
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const person = {
+    name: req.body.name,
+    number: req.body.number,
+  };
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      res.json(updatedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res, next) => {

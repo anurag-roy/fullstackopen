@@ -35,9 +35,9 @@ const App = () => {
           `${newName} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        const newPerson = { ...duplicatePerson, number: newNumber };
+        const newPerson = { name: duplicatePerson.name, number: newNumber };
         personService
-          .update(newPerson.id, newPerson)
+          .update(duplicatePerson.id, newPerson)
           .then((returnedPerson) => {
             setPersons(
               persons.map((p) => (p.name === newName ? returnedPerson : p))

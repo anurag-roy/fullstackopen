@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 
 if (process.argv.length < 3) {
-  console.log(
-    "Please provide the password as an argument: node mongp.js <password>"
-  );
+  console.log("Please provide the password as an argument: node mongp.js <password>");
   process.exit(1);
 }
 

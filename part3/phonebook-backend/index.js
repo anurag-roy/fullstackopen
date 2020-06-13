@@ -1,24 +1,22 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import Person from "./models/person.js";
 import dotenv from "dotenv";
+import Person from "./models/person.js";
+
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static("build"));
-app.use(
-  morgan(
-    ":method :url :status :res[content-length] - :response-time ms :postContent"
-  )
-);
+//app.use(express.static("build"));
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :postContent"));
 
 morgan.token("postContent", (req, res) => {
   if (req.method === "POST" || req.method === "PUT") {
     return JSON.stringify(req.body);
   }
+  return "";
 });
 
 app.get("/info", (req, res) => {
@@ -28,7 +26,7 @@ app.get("/info", (req, res) => {
       `<div>
           Phonebook has info for ${result} people <br /> <br />
           ${requestDateTime}
-       </div>`
+       </div>`,
     );
   });
 });
@@ -100,9 +98,10 @@ app.use(unknownEndpoint);
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
-  if (error.name === "CastError" && error.kind == "ObjectId") {
+  if (error.name === "CastError" && error.kind === "ObjectId") {
     return response.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
+  }
+  if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message });
   }
 

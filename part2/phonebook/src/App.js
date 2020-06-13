@@ -32,16 +32,14 @@ const App = () => {
     if (duplicatePerson) {
       if (
         window.confirm(
-          `${newName} is already added to phonebook, replace the old number with a new one?`
+          `${newName} is already added to phonebook, replace the old number with a new one?`,
         )
       ) {
         const newPerson = { name: duplicatePerson.name, number: newNumber };
         personService
           .update(duplicatePerson.id, newPerson)
           .then((returnedPerson) => {
-            setPersons(
-              persons.map((p) => (p.name === newName ? returnedPerson : p))
-            );
+            setPersons(persons.map((p) => (p.name === newName ? returnedPerson : p)));
             setNotification({
               type: "info",
               message: `Updated phone number for ${returnedPerson.name}`,
@@ -79,8 +77,13 @@ const App = () => {
           }, 5000);
         })
         .catch((error) => {
-          alert("Could not add person to phonebook.");
-          console.error(error);
+          setNotification({
+            type: "error",
+            message: `${error.response.data.error}`,
+          });
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
         });
     }
     setNewName("");
@@ -102,9 +105,7 @@ const App = () => {
   const deletePerson = (id) => {
     const { name } = persons.find((p) => p.id === id);
     if (window.confirm(`Delete ${name} ?`)) {
-      personService
-        .remove(id)
-        .then(setPersons(persons.filter((p) => p.id !== id)));
+      personService.remove(id).then(setPersons(persons.filter((p) => p.id !== id)));
     }
   };
 

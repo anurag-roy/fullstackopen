@@ -13,7 +13,7 @@ console.log("Connecting to ", url);
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((res) => console.log("Connected succesfully"))
+  .then(() => console.log("Connected succesfully"))
   .catch((err) => console.log("Couldn't connect. Error: ", err.message));
 
 const personSchema = new mongoose.Schema({

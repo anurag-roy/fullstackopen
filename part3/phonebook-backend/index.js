@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static("build"));
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :postContent"));
 
-morgan.token("postContent", (req, res) => {
+morgan.token("postContent", (req) => {
   if (req.method === "POST" || req.method === "PUT") {
     return JSON.stringify(req.body);
   }
@@ -85,7 +85,7 @@ app.put("/api/persons/:id", (req, res, next) => {
 
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then((result) => {
+    .then(() => {
       res.status(204).end();
     })
     .catch((error) => next(error));

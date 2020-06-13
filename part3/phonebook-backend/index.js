@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-//app.use(express.static("build"));
+app.use(express.static("build"));
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :postContent"));
 
 morgan.token("postContent", (req, res) => {
@@ -32,9 +32,11 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons", (req, res, next) => {
-  Person.find({}).then((result) => {
-    res.json(result).catch((error) => next(error));
-  });
+  Person.find({})
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (req, res, next) => {

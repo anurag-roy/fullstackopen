@@ -9,7 +9,7 @@ blogsRouter.get("/", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-blogsRouter.post("/", (request, response) => {
+blogsRouter.post("/", (request, response, next) => {
   const blog = new Blog(request.body);
 
   blog

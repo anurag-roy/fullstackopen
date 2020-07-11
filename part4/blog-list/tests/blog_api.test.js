@@ -21,7 +21,7 @@ test("blogs are returned as json", async () => {
     .expect("Content-Type", /application\/json/);
 });
 
-test("number of returned notes is 5", async () => {
+test("number of returned blogs is correct", async () => {
   const { body: blogList } = await api.get("/api/blogs");
   expect(blogList).toHaveLength(helper.initialBlogs.length);
 });
@@ -47,6 +47,22 @@ test("a valid blog can be added", async () => {
 
   const blogsAtEnd = await helper.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+});
+
+test("default value of likes is set to 0", async () => {
+  const newBlogWithoutLikes = {
+    title: "An invalid blog without likes",
+    author: "Anurag Roy",
+    url: "https://github.com/anurag2pirad/notMyBlog",
+  };
+
+  const { body: createdBlog } = await api
+    .post("/api/blogs")
+    .send(newBlogWithoutLikes)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  expect(createdBlog.likes).toBe(0);
 });
 
 afterAll(() => {

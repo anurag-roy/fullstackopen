@@ -65,6 +65,15 @@ test("default value of likes is set to 0", async () => {
   expect(createdBlog.likes).toBe(0);
 });
 
+test("respond with 400 on missing title or url", async () => {
+  const newInvalidBlog = {
+    author: "Anurag Roy",
+    likes: 23,
+  };
+
+  await api.post("/api/blogs").send(newInvalidBlog).expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

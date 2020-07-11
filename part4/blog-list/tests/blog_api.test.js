@@ -22,8 +22,13 @@ test("blogs are returned as json", async () => {
 });
 
 test("number of returned notes is 5", async () => {
-  const response = await api.get("/api/blogs");
-  expect(response.body).toHaveLength(helper.initialBlogs.length);
+  const { body: blogList } = await api.get("/api/blogs");
+  expect(blogList).toHaveLength(helper.initialBlogs.length);
+});
+
+test("id is defined", async () => {
+  const { body: blogList } = await api.get("/api/blogs");
+  blogList.forEach((b) => expect(b.id).toBeDefined());
 });
 
 afterAll(() => {

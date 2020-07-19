@@ -10,7 +10,7 @@ blogsRouter.post("/", async (request, response) => {
   const blog = new Blog(request.body);
 
   const savedBlog = await blog.save();
-  response.status(201).json(savedBlog);
+  response.status(201).json(savedBlog.toJSON());
 });
 
 blogsRouter.put("/:blogId", async ({ body, params }, response) => {
@@ -21,7 +21,7 @@ blogsRouter.put("/:blogId", async ({ body, params }, response) => {
   }
   const updatedBlog = await Blog.findByIdAndUpdate(params.blogId, blog, { new: true });
 
-  response.json(updatedBlog);
+  response.json(updatedBlog.toJSON());
 });
 
 blogsRouter.delete("/:blogId", async (request, response) => {

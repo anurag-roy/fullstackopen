@@ -8,6 +8,21 @@ usersRouter.get("/", async (request, response) => {
 });
 
 usersRouter.post("/", async ({ body }, response) => {
+  if (!body.password) {
+    response
+      .status(400)
+      .json({ error: "User validation failed: username: Path `password` is required." });
+  }
+
+  if (body.password.length < 3) {
+    response
+      .status(400)
+      .json({
+        error:
+          "User validation failed: username: Path `password` is shorter than the minimum allowed length (3).",
+      });
+  }
+
   const saltRounds = 11;
   const passwordHash = await bcrypt.hash(body.password, saltRounds);
 

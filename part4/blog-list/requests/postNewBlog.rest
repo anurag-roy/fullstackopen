@@ -1,9 +1,8 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudXJhZ3JveTExIiwiaWQiOiI1ZjFjNWUxNWY3ZDE5ZjEzNzEzMWQwYmQiLCJpYXQiOjE2MDYzMzU1MjZ9.s5AQMwwEy3t8FwTkY5jYMSlGqgdmg3NH46nyeIw3pKo
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudXJhZ3JveTExIiwiaWQiOiI1ZjFjNWUxNWY3ZDE5ZjEzNzEzMWQwYmQiLCJpYXQiOjE2MDYzMzY3ODN9.swp5-jkiZO57L_AQb6N2EQcr3xMMXTo3lZ9LeuJgmys
 
 {
-  "author": "Anurag Roy New",
-  "title": "4.20",
-  "likes": 420
+  "title": "Test Blog",
+  "likes": 1
 }

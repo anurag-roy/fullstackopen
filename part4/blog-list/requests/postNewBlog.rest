@@ -1,7 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudXJhZ3JveTExIiwiaWQiOiI1ZjFjNWUxNWY3ZDE5ZjEzNzEzMWQwYmQiLCJpYXQiOjE2MDYzMzQ2NDd9.CeBxp6zH6u6exs5jVn_apwUU7vAPtccSd3w88mvnoJk
 
 {
-  "author": "Dodo Roy",
+  "author": "Anurag Roy",
+  "title": "My New Blog",
   "likes": 23
 }

@@ -48,9 +48,11 @@ blogsRouter.delete("/:blogId", async (request, response) => {
 
   const blog = await Blog.findById(request.params.blogId);
 
-  console.log(blog.user);
+  if (blog.user.toString() === decodedToken.id.toString()) {
+    await Blog.findByIdAndRemove(request.params.blogId);
+  }
 
-  if (blog.user.toString() === userid.toString()) response.status(204).end();
+  response.status(204).end();
 });
 
 module.exports = blogsRouter;

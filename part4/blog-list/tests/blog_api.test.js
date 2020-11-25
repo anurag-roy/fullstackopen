@@ -6,6 +6,20 @@ const Blog = require("../models/blog");
 
 const api = supertest(app);
 
+let token;
+
+beforeAll(async () => {
+  const userBody = {
+    username: "anuragroy",
+    password: "test@2020",
+  };
+
+  await api.post("/api/users").send(userBody);
+
+  const { body: loggedInUser } = await api.post("/api/login").send(userBody);
+  token = loggedInUser.token;
+});
+
 beforeEach(async () => {
   await Blog.deleteMany({});
 
@@ -31,7 +45,24 @@ test("id is defined", async () => {
   blogList.forEach((b) => expect(b.id).toBeDefined());
 });
 
-test("a valid blog can be added", async () => {
+test("respond with 401 on unauthorized", async () => {
+  const newBlog = {
+    title: "A valid blog",
+    author: "Anurag Roy",
+    url: "https://github.com/anurag2pirad/myBlog",
+    likes: 69,
+  };
+
+  const response = await api.post("/api/blogs").send(newBlog).expect(401);
+
+  console.log(response.body.error);
+  expect(response.body.error).toBe("invalid token");
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+});
+
+test("a valid blog can be added when authorized", async () => {
   const newBlog = {
     title: "A valid blog",
     author: "Anurag Roy",
@@ -42,6 +73,7 @@ test("a valid blog can be added", async () => {
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set({ Authorization: `Bearer ${token}` })
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
@@ -59,6 +91,7 @@ test("default value of likes is set to 0", async () => {
   const { body: createdBlog } = await api
     .post("/api/blogs")
     .send(newBlogWithoutLikes)
+    .set({ Authorization: `Bearer ${token}` })
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
@@ -71,7 +104,11 @@ test("respond with 400 on missing title or url", async () => {
     likes: 23,
   };
 
-  await api.post("/api/blogs").send(newInvalidBlog).expect(400);
+  await api
+    .post("/api/blogs")
+    .send(newInvalidBlog)
+    .set({ Authorization: `Bearer ${token}` })
+    .expect(400);
 });
 
 afterAll(() => {

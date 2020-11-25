@@ -18,9 +18,12 @@ blogsRouter.post("/", async (request, response) => {
 
   const user = await User.findById(decodedToken.id);
 
-  const blog = new Blog({ ...request.body, author: user.name });
+  const blog = new Blog({ ...request.body, author: user.name, user: user._id });
 
   const savedBlog = await blog.save();
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+
   response.status(201).json(savedBlog.toJSON());
 });
 
@@ -43,9 +46,11 @@ blogsRouter.delete("/:blogId", async (request, response) => {
     return response.status(401).json({ error: "token missing or invalid" });
   }
 
-  await Blog.findByIdAndRemove(request.params.blogId);
+  const blog = await Blog.findById(request.params.blogId);
 
-  response.status(204).end();
+  console.log(blog.user);
+
+  if (blog.user.toString() === userid.toString()) response.status(204).end();
 });
 
 module.exports = blogsRouter;

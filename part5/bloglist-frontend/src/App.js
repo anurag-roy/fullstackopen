@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
+import Notification from './components/Notification';
 import loginService from './services/login';
 import blogService from './services/blogs';
 
@@ -13,6 +14,9 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
 
   // Load user details if present
   useEffect(() => {
@@ -46,8 +50,20 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
+
+      setMessageType('success');
+      setMessage('logged in successfully');
+      setTimeout(() => {
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
     } catch (exception) {
-      alert('Wrong credentials');
+      setMessageType('error');
+      setMessage('wrong username or password');
+      setTimeout(() => {
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
     }
   };
 
@@ -55,9 +71,18 @@ const App = () => {
   const logout = () => {
     setUser(null);
     window.localStorage.clear();
+
+    setMessageType('success');
+    setMessage('logged out successfully');
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType(null);
+    }, 5000);
   };
 
-  const createBlog = async () => {
+  const createBlog = async (event) => {
+    event.preventDefault();
+
     const newBlog = await blogService.create({
       title,
       author,
@@ -67,8 +92,16 @@ const App = () => {
     setAuthor('');
     setUrl('');
 
-    const newBlogs = [...blogs].push(newBlog);
+    const newBlogs = [...blogs];
+    newBlogs.push(newBlog);
     setBlogs(newBlogs);
+
+    setMessageType('success');
+    setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`);
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType(null);
+    }, 5000);
   };
 
   // Login Form
@@ -138,12 +171,18 @@ const App = () => {
 
   // If no user is logged in, show login screen
   if (user === null) {
-    return <div>{loginForm()}</div>;
+    return (
+      <div>
+        <Notification message={message} type={messageType} />
+        {loginForm()}
+      </div>
+    );
   }
 
   // If a user is logged in, show list of blogs
   return (
     <div>
+      <Notification message={message} type={messageType} />
       <h2>blogs</h2>
       <div>
         {user.name} logged in
